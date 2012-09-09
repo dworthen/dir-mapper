@@ -137,7 +137,7 @@ Lets say we have a directory of posts that start with the date in the file name 
 			- 2012-04-10-cats
 			- 2012-05-20-apples
 
-The following code will sort the files based on the filename:
+The following code will sort the files based on the name at the end of the file:
 
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
@@ -149,7 +149,7 @@ The following code will sort the files based on the filename:
 				return temp[temp.length - 1];
 			});
 			console.log(results.sort(1, 'name'));
-			// Will print the files in order based on the 
+			// Will print the files in order based on the name, ie 'apples'
 		});
 
 ## Testing
