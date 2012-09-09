@@ -111,8 +111,8 @@ This method, when provided both the field and fn arguments, acts just like the A
 	- i: the current key of the array.
 	- arr: the files array itself.
 
-		var DirMapper = require('dir-mapper');
-		var root = new DirMapper();
+		var DirMapper = require('dir-mapper'),
+			root = new DirMapper();
 
 		root.walk('path/to/root', function(err, results) {
 			// find which files are in the images directory
@@ -125,6 +125,32 @@ This method, when provided both the field and fn arguments, acts just like the A
 			// sort the new images list in descending order
 			images.sort(-1);
 		});	
+
+## Example 
+
+Lets say we have a directory of posts that start with the date in the file name like so:
+
+		posts/
+			- 2012-01-10-bananaz
+			- 2012-01-27-arizona
+			- 2012-03-20-zebras
+			- 2012-04-10-cats
+			- 2012-05-20-apples
+
+The following code will sort the files based on the filename:
+
+		var DirMapper = require('dir-mapper'),
+			root = new DirMapper();
+
+		root.walk('path/to/posts', function(err, results) {
+			if (err) throw err;
+			results.flag('name', function(el) {
+				var temp = el.files.split('-');
+				return temp[temp.length - 1];
+			});
+			console.log(results.sort(1, 'name'));
+			// Will print the files in order based on the 
+		});
 
 ## Testing
 
