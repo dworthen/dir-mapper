@@ -143,4 +143,4 @@ Then
 - Add synchronous version?
 - Since there is an event driven api maybe convert to a stream??
 - more tests, tests are not comprehensive
-- comment code. 
+- comment code.  
