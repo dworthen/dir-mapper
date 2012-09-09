@@ -5,7 +5,7 @@ Asyncronously recursively maps out a directory structure. Contains tools for org
 ## Example
 
 This
-
+		
 		root/
 			css/
 				fonts.css
@@ -19,7 +19,7 @@ This
 			readme.txt
 
 Will become 
-
+		
 		[ {file: '/path/to/root/css'},
 			{file: 'path/to/root/css/fonts.css'},
 			{file: 'path/to/root/css/style.css'},
@@ -33,7 +33,7 @@ Will become
 		]
 
 ## Install
-
+		
 		npm install dir-mapper
 
 ## API
@@ -41,7 +41,7 @@ Will become
 Directory Mapper supports both a callback based api and an event driven api.
 
 ### Callback
-
+		
 		var DirMapper = require('dir-mapper'),
 				root = new DirMapper();
 
@@ -51,7 +51,7 @@ Directory Mapper supports both a callback based api and an event driven api.
 		});
 
 ### Event
-
+		
 		var root = new (require('dir-mapper'));
 
 		root.on('error', function(err) {
@@ -80,7 +80,7 @@ Directory Mapper supports both a callback based api and an event driven api.
 #### DirMapper.prototype.walk(dir, [recurse], [cb])
 
 Same as the constructor method except dir is required. 
-
+		
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
 
@@ -92,7 +92,7 @@ Since Directory Mapper maps a directory structure asynchronously there is no gar
 
 - order: number, 1 for ascending and -1 for descending.
 - field: the field to order the array of objects by, defaults to 'file'.
-
+		
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
 
@@ -110,10 +110,10 @@ This method, when provided both the field and fn arguments, acts just like the A
 	- el: current array element.
 	- i: the current key of the array.
 	- arr: the files array itself.
-
+		
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
-
+		
 		root.walk('path/to/root', function(err, results) {
 			// find which files are in the images directory
 			results.flag('images', function(el) {
@@ -129,7 +129,7 @@ This method, when provided both the field and fn arguments, acts just like the A
 ## Example 
 
 Lets say we have a directory of posts that start with the date in the file name like so:
-
+		
 		posts/
 			- 2012-01-10-bananaz
 			- 2012-01-27-arizona
@@ -138,7 +138,7 @@ Lets say we have a directory of posts that start with the date in the file name 
 			- 2012-05-20-apples
 
 The following code will sort the files based on the name at the end of the file:
-
+		
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
 
@@ -155,11 +155,11 @@ The following code will sort the files based on the name at the end of the file:
 ## Testing
 
 First run
-
+		
 		npm install --dev
 
 Then
-
+		
 		npm test
 
 ## TODO:
