@@ -1,6 +1,6 @@
 var should = require('should');
 
-describe('async-dir-mapper', function() {
+describe('dir-mapper', function() {
   
   var DirMapper = require(__dirname + '/../lib/dir-mapper')
     , testDir = __dirname + '/fixtures/'
@@ -106,41 +106,129 @@ describe('async-dir-mapper', function() {
 
       });
     });
+
   });
 
- describe('sort(order, [field]), 1 for ascending and -1 for descending:', function() {
-   it('it should order the files array by the field according to order', function(done) {
-     fileObjs.walk(testDir, function(err, results) {
-       should.not.exist(err);
-       results.sort(1);
-       /\/images/.test(results.files[0].file).should.be.true;
-       results.sort(1, 'file');
-       /\/images/.test(results.files[0].file).should.be.true;
-       results.sort(-1);
-       /\/style2.css/.test(results.files[0].file).should.be.true;
-       // console.log(fileObjs);
-       done();
-     });
-     
-   });
- });
+  describe('sort:', function() {
 
-  describe('flag(flagName, [fn(el, in, arr)])', function() {
-    it('should check files for specified properties and flag the files', function(done) {
-      fileObjs.walk(testDir, function(err, results) {
-        should.not.exist(err);
-        var newResults = results.flag('file');
-        newResults.sort(1);
-        /\/images/.test(newResults.files[0].file).should.be.true;
-        results.flag('cool', function(el) {
-          return /\/scripts/.test(el.file);
+    describe('sort(order), 1 for asc, -1 for desc', function() {
+      it('should organize the files by their names according to the order.', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.sort(1);
+          /\/images/.test(results.files[0].file).should.be.true;
+          results.sort(-1);
+          /\/style2.css/.test(results.files[0].file).should.be.true;
+          done();
         });
-        newResults = results.flag('cool');
-        newResults.sort(1);
-        /\/scripts/.test(newResults.files[0].file).should.be.true;
-        done();
       });
     });
+
+    describe('sort(order, field), field: property to order by', function() {
+      it('should organize the files array according to the field key.', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.sort(1, 'file');
+          /\/images/.test(results.files[0].file).should.be.true;
+          results.sort(-1);
+          done();
+        });
+      })
+    });
+
+  });
+
+  describe('flag: ', function() {
+
+    describe('flag(flagname)', function() {
+      it('should return all files that return a \'true\' value for the flagname property', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          var newResults = results.flag('file');
+          newResults.sort(1);
+          /\/images/.test(newResults.files[0].file).should.be.true;
+          done();
+        });
+      });
+    });
+
+    describe('flag(flag, fn(el, in, arr))', function() {
+      it('should mark files according to the fn function', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.flag('cool', function(el) {
+            return /\/scripts/.test(el.file);
+          });
+          var newResults = results.flag('cool');
+          newResults.sort(1);
+          /\/scripts/.test(newResults.files[0].file).should.be.true;
+          done();
+        });
+      });
+    });
+
+    describe('flag(flag[])', function() {
+      it('should check a file for several properties', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.flag('cool', function(el) {
+            return /\/scripts/.test(el.file);
+          });
+          var flagResults = results.flag(['file', 'cool']);
+          flagResults.sort(1);
+          /\/scripts/.test(flagResults.files[0].file).should.be.true;
+          done();
+        })
+      });
+    });
+
+    describe('flag(flag[], fn(el, in, arr))', function() {
+      it('should mark a file with several properties at once', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.flag(['cool','nice'], function(el) {
+            return [/\/scripts/.test(el.file), 'okay'];
+          });
+          var flagResults = results.flag(['cool', 'nice']);
+          flagResults.sort(1);
+          /\/scripts/.test(flagResults.files[0].file).should.be.true;
+          done();
+        })
+      });
+    });
+
+    describe('flag(flag, match)', function() {
+      it('should check a file for a flag with a property of match', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.flag('script', function(el) {
+            var temp = /\/scripts/.test(el.file) ? 'yes' : 'no';
+            return temp;
+          });
+          var flagResults = results.flag('script', 'yes');
+          flagResults.sort(1);
+          /\/scripts/.test(flagResults.files[0].file).should.be.true;
+          done();
+        })
+      });
+    });
+
+    describe('flag([flag], [match])', function() {
+      it('should check a file for a several properties', function(done) {
+        fileObjs.walk(testDir, function(err, results) {
+          should.not.exist(err);
+          results.flag(['script','nice'], function(el) {
+            var temp = /\/scripts/.test(el.file) ? 'yes' : 'no';
+            return [temp, 'cool'];
+          });
+          var flagResults = results.flag(['script', 'nice'],['yes','cool']);
+          flagResults.sort(1);
+          /\/scripts/.test(flagResults.files[0].file).should.be.true;
+          done();
+        })
+      });
+    });
+
   });
 
   
