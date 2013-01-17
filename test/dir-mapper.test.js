@@ -13,9 +13,6 @@ describe('dir-mapper', function() {
   describe('Constructor1: DirMapper()', function() {
     it('Should set some configs', function() {
       fileObjs.should.have.property('files');
-//      fileObjs.should.have.property('filesLeft', 0);
-//      fileObjs.should.have.property('dirsLeft', 1);
-//      fileObjs.should.have.property('recurse', true);
     });  
   });
   

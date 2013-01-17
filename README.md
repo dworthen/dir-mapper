@@ -1,6 +1,6 @@
 # Asynchronous Directory Mapper
 
-Asyncronously recursively maps out a directory structure. Contains tools for organizing and filtering files too.
+Like the title implies, it asynchronously and recursively maps out directories. This library also contains tools for organizing and filtering files.
 
 ## Example
 
@@ -66,10 +66,10 @@ Directory Mapper supports both a callback based api and an event driven api.
 
 ### Methods
 
-#### DirMapper([dir ], [recurse], [cb])
+#### DirMapper([dir], [recurse], [cb])
 
-- dir: string, directory to walk, if provided.
-- recurse: boolean, to map all sub-directories or not. Defaults to true (Note: this parameter does not make a difference at this time, Directory Mapper will map all sub directories.)
+- dir: string, directory to walk.
+- recurse: boolean, to map all sub-directories or not. Defaults to true (Note: Currently this parameter has no effect.)
 - cb: a callback function to call once all directories have been walked, otherwise may listen for the end event. 
 		
 		var DirMapper = require('dir-mapper');
@@ -77,9 +77,7 @@ Directory Mapper supports both a callback based api and an event driven api.
 			// do stuff
 		});
 
-#### DirMapper.prototype.walk(dir, [recurse], [cb])
-
-Same as the constructor method except dir is required. 
+#### DirMapper.prototype.walk(dir, [recurse], [cb]) 
 		
 		var DirMapper = require('dir-mapper'),
 			root = new DirMapper();
@@ -98,6 +96,7 @@ Since Directory Mapper maps a directory structure asynchronously there is no gar
 
 		root.walk('path/to/root', function(err, results) {
 			results.sort(1);
+			// same as results.sort(1, 'file');
 			// results.files will be in the same order as the example above. 
 		});
 
@@ -126,6 +125,34 @@ This method, when provided both the field and fn arguments, acts just like the A
 			images.sort(-1);
 		});	
 
+#### DirMapper.prototype.flag(field[], [fn])
+
+Returns all files that satisfy all of the properties of field[]. If fn is present, then files will be marked with the several properties of field[].
+
+		results.flag(['isImage','isJpeg'], function(el) {
+      return [/\/images/.test(el.file), /.*\.jpeg$/.test(el.file)];
+    });
+    // later
+    var flagResults = results.flag(['isImage', 'isJpeg']);
+
+#### DirMapper.prototype.flag(field[], match)
+
+		results.flag('script', function(el) {
+      return /\/scripts/.test(el.file) ? 'yes' : 'no';
+    });
+    // later
+    var flagResults = results.flag('script', 'yes');
+
+    // or 
+
+    results.flag(['script', 'size'], function(el) {
+      var temp = /\/scripts/.test(el.file) ? 'yes' : 'no';
+      var temp2 = /.*\.min\..*/.test(el.file) ? 'minified' : 'source'
+      return [temp, temp2];
+    });
+    // later
+    var flagResults = results.flag(['script', 'size'], ['yes', 'minified']);
+
 ## Example 
 
 Lets say we have a directory of posts that start with the date in the file name like so:
@@ -148,6 +175,13 @@ The following code will sort the files based on the name at the end of the file:
 				var temp = el.files.split('-');
 				return temp[temp.length - 1];
 			});
+
+			// Will result in
+			// [
+			// {file: '2012-01-10-bananaz', name: 'bananaz'}, 
+			// ...
+			// {file: '2012-05-20-apples', name: 'apples'}]
+
 			console.log(results.sort(1, 'name'));
 			// Will print the files in order based on the name, ie 'apples'
 		});
@@ -168,8 +202,7 @@ Then
 - Add the ability to either recurse or not
 - Add synchronous version?
 - Since there is an event driven api maybe convert to a stream??
-- more tests, tests are not comprehensive
-- comment code.  
+- Add a data event for every file added to the list
 
 ## License
 
