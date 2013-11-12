@@ -1,16 +1,20 @@
 {
   "author": "Derek Worthen",
   "name": "dir-mapper",
-  "description": "Asynchronous, recursive directory mapper.",
-  "version": "0.0.2",
+  "description": "Recursive directory mapper. Supports callback, streaming and promise based APIs. Will map at all files in a directory and sub-directories.",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dworthen/dir-mapper"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "~2.2.1",
+    "rsvp": "~2.0.4"
+  },
   "devDependencies": {
     "mocha": "~1.3.0",
-    "should": "~0.6.3"
+    "should": "~0.6.3",
+    "chai": "~1.8.1"
   },
   "optionalDependencies": {},
   "engines": {
